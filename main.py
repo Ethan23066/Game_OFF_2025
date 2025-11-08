@@ -25,6 +25,7 @@ def run_game():
     # Lancement du jeu avec le contrôleur choisi
     game = Game(screen, control_mode=control_mode)
     game.run()
+    # Fin du jeu : pas de relance, affichage des résultats uniquement
     pygame.quit()
 
 if __name__ == "__main__":

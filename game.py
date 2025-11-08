@@ -40,12 +40,10 @@ class Game:
 
             if self.menu.active:
                 self.menu.draw(self.screen)
-                continue
-
-            if not self.interface.game_over:
-                self.update(dt)
-
-            self.render()
+            else:
+                if not self.interface.game_over:
+                    self.update(dt)
+                self.render()
 
         pygame.quit()
 
@@ -53,36 +51,45 @@ class Game:
         self.controller.update()
         self.player.regen_stamina(dt)
 
-        if self.controller.is_left():
-            self.player.move_left()
-        if self.controller.is_right():
-            self.player.move_right()
+        if self.controller.is_left(): self.player.move_left()
+        if self.controller.is_right(): self.player.move_right()
         if hasattr(self.controller, "is_fire") and self.controller.is_fire():
             bullet = self.player.fire()
-            if bullet:
-                self.bullets.add(bullet)
+            if bullet: self.bullets.add(bullet)
 
-        self.wave_manager.update()
+        self.wave_manager.update(dt)
         self.bullets.update(dt)
 
+        # Collisions
         for bullet in self.bullets.copy():
             for enemy in self.wave_manager.enemies.copy():
                 if bullet.rect.colliderect(enemy.rect):
                     self.bullets.remove(bullet)
                     self.wave_manager.enemies.remove(enemy)
+                    self.interface.add_kill()
                     break
 
         for enemy in self.wave_manager.enemies:
             if enemy.rect.colliderect(self.player.rect):
-                self.interface.set_game_over()
+                self.player.health = 0
                 break
+
+        self.wave_manager.check_player_health(self.player)
 
         if self.wave_manager.is_wave_cleared():
             self.wave_manager.spawn_wave()
 
+        if self.wave_manager.max_waves is not None and self.wave_manager.current_wave >= self.wave_manager.max_waves:
+            self.interface.set_game_over(self.wave_manager, self.player)
+            self.wave_manager.enemies.clear()
+            self.bullets.empty()
+            self.player = None  # ← supprime visuellement le joueur
+
     def render(self):
         self.screen.fill((0, 0, 0))
-        self.screen.blit(self.player.image, self.player.rect)
+
+        if self.player:
+            self.screen.blit(self.player.image, self.player.rect)
 
         for enemy in self.wave_manager.enemies:
             self.screen.blit(enemy.image, enemy.rect)

@@ -1,32 +1,39 @@
-import pygame
 from ennemy import Enemy
 
 class WaveManager:
-    def __init__(self, enemy_surface, max_waves=5):
+    def __init__(self, enemy_surface):
         self.enemy_surface = enemy_surface
         self.current_wave = 0
-        self.max_waves = max_waves
+        self.max_waves = None
         self.enemies = []
+        self.virtual_time = 0.0
+        self.virtual_time_total = 0.0  # ← ajouté ici
+        self.wave_time_limit = 15.0  # secondes max par vague
 
     def spawn_wave(self):
-        if self.current_wave >= self.max_waves:
+        if self.max_waves is not None and self.current_wave >= self.max_waves:
             return []
 
-        self.enemies = []
-        for x in range(10):
-            enemy = Enemy(self.enemy_surface, x * 60, 50)
+        enemy_count = 10 + self.current_wave
+        for i in range(enemy_count):
+            x = (i % 10) * 60
+            y = 50 + (i // 10) * 40
+            enemy = Enemy(self.enemy_surface, x, y)
             self.enemies.append(enemy)
 
         self.current_wave += 1
+        self.virtual_time = 0.0
         return self.enemies
 
-    def update(self):
+    def update(self, dt):
+        self.virtual_time += dt
+        self.virtual_time_total += dt  # ← ajouté ici
         for enemy in self.enemies:
             enemy.update()
 
     def is_wave_cleared(self):
-        return len(self.enemies) == 0
+        return self.virtual_time >= self.wave_time_limit or len(self.enemies) == 0
 
     def check_player_health(self, player):
-        if player.health <= 0:
+        if player.health <= 0 and self.max_waves is None:
             self.max_waves = self.current_wave
