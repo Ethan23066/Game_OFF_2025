@@ -4,7 +4,7 @@ class Enemy:
     def __init__(self, image, x, y):
         self.image = image
         self.rect = self.image.get_rect(topleft=(x, y))
-        self.speed = 2
+        self.speed = 5
         self.direction = 1  # 1 = droite, -1 = gauche
 
     def update(self):

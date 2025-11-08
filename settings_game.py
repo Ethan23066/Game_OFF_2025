@@ -3,7 +3,7 @@ WIDTH = 800
 HEIGHT = 600
 
 # Framerate
-FPS = 30
+FPS = 120
 
 # Police par défaut
 FONT_NAME = "Arial"
