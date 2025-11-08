@@ -5,6 +5,7 @@ from interface_game import Interface
 from menu_game import Menu
 from player import Player
 from wave_manager import WaveManager
+from hud import HUD
 
 class Game:
     def __init__(self, screen, control_mode="keyboard"):
@@ -23,6 +24,7 @@ class Game:
         self.wave_manager.spawn_wave()
 
         self.bullets = pygame.sprite.Group()
+        self.hud = HUD(self.player)
 
     def run(self):
         running = True
@@ -47,6 +49,7 @@ class Game:
 
     def update(self, dt):
         self.controller.update()
+        self.player.regen_stamina(dt)
 
         if self.controller.is_left():
             self.player.move_left()
@@ -60,7 +63,6 @@ class Game:
         self.wave_manager.update()
         self.bullets.update(dt)
 
-        # Collision bullet-enemy
         for bullet in self.bullets.copy():
             for enemy in self.wave_manager.enemies.copy():
                 if bullet.rect.colliderect(enemy.rect):
@@ -68,14 +70,12 @@ class Game:
                     self.wave_manager.enemies.remove(enemy)
                     break
 
-        # Collision enemy-player
         for enemy in self.wave_manager.enemies:
             if enemy.rect.colliderect(self.player.rect):
-                print("Collision joueur-ennemi")
+                self.player.health -= 10
                 self.player.rect.midbottom = (-100, -100)
                 break
 
-        # Nouvelle vague si tous les ennemis sont détruits
         if self.wave_manager.is_wave_cleared():
             self.wave_manager.spawn_wave()
 
@@ -87,7 +87,7 @@ class Game:
             self.screen.blit(enemy.image, enemy.rect)
 
         self.bullets.draw(self.screen)
-        self.interface.draw(self.screen)
+        self.hud.draw(self.screen)
 
         if hasattr(self.controller, "draw_mobile_buttons"):
             self.controller.draw_mobile_buttons(self.screen)

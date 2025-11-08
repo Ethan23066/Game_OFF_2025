@@ -14,11 +14,14 @@ class Player:
         self.last_fire_time = 0
         self.fire_delay = 200  # ms
 
-        self.stamina = 100
+        self.stamina = 0
         self.max_stamina = 100
-        self.stamina_regen_rate = 10  # par seconde
-        self.stamina_move_cost = 5
-        self.stamina_fire_cost = 20
+        self.stamina_regen_rate = 5  # par seconde
+        self.stamina_move_cost = 1
+        self.stamina_fire_cost = 5
+
+        self.health = 100
+        self.max_health = 100
 
     def move_left(self):
         if self.stamina >= self.stamina_move_cost:
