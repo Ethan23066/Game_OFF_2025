@@ -1,6 +1,7 @@
+import pygame
 from settings_game import WIDTH
 from bullet import Bullet
-from assets import load_sprite  # Assure-toi que le nom du fichier est bien assets.py
+from assets import load_sprite
 
 class Player:
     def __init__(self, image):
@@ -10,15 +11,28 @@ class Player:
         self.bullet_speed = 500
         self.bullet_sprite = load_sprite("bullet_blue.png")
 
+        self.last_fire_time = 0
+        self.fire_delay = 200  # ms
+
+        self.stamina = 100
+        self.max_stamina = 100
+        self.stamina_regen_rate = 10  # par seconde
+        self.stamina_move_cost = 5
+        self.stamina_fire_cost = 20
+
     def move_left(self):
-        self.rect.x -= self.speed
-        if self.rect.left < 0:
-            self.rect.left = 0
+        if self.stamina >= self.stamina_move_cost:
+            self.rect.x -= self.speed
+            self.stamina -= self.stamina_move_cost
+            if self.rect.left < 0:
+                self.rect.left = 0
 
     def move_right(self):
-        self.rect.x += self.speed
-        if self.rect.right > WIDTH:
-            self.rect.right = WIDTH
+        if self.stamina >= self.stamina_move_cost:
+            self.rect.x += self.speed
+            self.stamina -= self.stamina_move_cost
+            if self.rect.right > WIDTH:
+                self.rect.right = WIDTH
 
     def draw(self, screen):
         screen.blit(self.image, self.rect)
@@ -27,11 +41,22 @@ class Player:
         return self.rect.center
 
     def fire(self):
-        # Tire un bullet vers le haut
-        return Bullet(
-            x=self.rect.centerx,
-            y=self.rect.top,
-            direction=(0, -1),
-            speed=self.bullet_speed,
-            sprite_name="bullet_blue.png"
-        )
+        now = pygame.time.get_ticks()
+        if (
+            now - self.last_fire_time >= self.fire_delay
+            and self.stamina >= self.stamina_fire_cost
+        ):
+            self.last_fire_time = now
+            self.stamina -= self.stamina_fire_cost
+            return Bullet(
+                x=self.rect.centerx,
+                y=self.rect.top,
+                direction=(0, -1),
+                speed=self.bullet_speed,
+            )
+        return None
+
+    def regen_stamina(self, dt):
+        self.stamina += self.stamina_regen_rate * dt
+        if self.stamina > self.max_stamina:
+            self.stamina = self.max_stamina

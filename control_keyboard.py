@@ -13,7 +13,7 @@ class KeyboardController:
     def is_right(self):
         return self.keys[pygame.K_RIGHT]
 
-    def is_space(self):
+    def is_fire(self):
         return self.keys[pygame.K_SPACE]
 
     def is_enter(self):
