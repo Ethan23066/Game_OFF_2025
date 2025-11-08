@@ -16,9 +16,9 @@ class Player:
 
         self.stamina = 0
         self.max_stamina = 100
-        self.stamina_regen_rate = 5  # par seconde
+        self.stamina_regen_rate = 10  # par seconde
         self.stamina_move_cost = 1
-        self.stamina_fire_cost = 5
+        self.stamina_fire_cost = 10
 
         self.health = 100
         self.max_health = 100

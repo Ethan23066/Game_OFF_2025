@@ -26,3 +26,7 @@ class WaveManager:
 
     def is_wave_cleared(self):
         return len(self.enemies) == 0
+
+    def check_player_health(self, player):
+        if player.health <= 0:
+            self.max_waves = self.current_wave

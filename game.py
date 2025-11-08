@@ -42,7 +42,9 @@ class Game:
                 self.menu.draw(self.screen)
                 continue
 
-            self.update(dt)
+            if not self.interface.game_over:
+                self.update(dt)
+
             self.render()
 
         pygame.quit()
@@ -72,8 +74,7 @@ class Game:
 
         for enemy in self.wave_manager.enemies:
             if enemy.rect.colliderect(self.player.rect):
-                self.player.health -= 10
-                self.player.rect.midbottom = (-100, -100)
+                self.interface.set_game_over()
                 break
 
         if self.wave_manager.is_wave_cleared():
@@ -88,6 +89,7 @@ class Game:
 
         self.bullets.draw(self.screen)
         self.hud.draw(self.screen)
+        self.interface.draw(self.screen)
 
         if hasattr(self.controller, "draw_mobile_buttons"):
             self.controller.draw_mobile_buttons(self.screen)
