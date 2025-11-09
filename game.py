@@ -15,9 +15,7 @@ class Game:
         self.interface = Interface()
         self.menu = Menu()
 
-        self.player = Player(pygame.Surface((40, 30)))
-        self.player.image.fill((0, 255, 0))
-
+        self.player = Player()
         self.enemy_surface = pygame.Surface((40, 30))
         self.enemy_surface.fill((255, 0, 0))
         self.wave_manager = WaveManager(self.enemy_surface)
@@ -59,11 +57,14 @@ class Game:
 
         if self.player:
             self.player.regen_stamina(dt)
-            if self.controller.is_left(): self.player.move_left()
-            if self.controller.is_right(): self.player.move_right()
+            if self.controller.is_left():
+                self.player.move_left()
+            if self.controller.is_right():
+                self.player.move_right()
             if hasattr(self.controller, "is_fire") and self.controller.is_fire():
                 bullet = self.player.fire()
-                if bullet: self.bullets.add(bullet)
+                if bullet:
+                    self.bullets.add(bullet)
 
         self.wave_manager.update(dt)
         self.bullets.update(dt)
@@ -101,7 +102,7 @@ class Game:
             pygame.draw.rect(self.screen, (10, 10, 10), rect)
 
         if self.player:
-            self.screen.blit(self.player.image, self.player.rect)
+            self.player.draw(self.screen)
 
         for enemy in self.wave_manager.enemies:
             self.screen.blit(enemy.image, enemy.rect)

@@ -14,7 +14,7 @@ class WaveManager:
         if self.max_waves is not None and self.current_wave >= self.max_waves:
             return []
 
-        enemy_count = 10 + self.current_wave
+        enemy_count = 1 + self.current_wave
         for i in range(enemy_count):
             x = (i % 10) * 60
             y = 50 + (i // 10) * 40

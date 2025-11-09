@@ -4,8 +4,8 @@ from bullet import Bullet
 from assets import load_sprite
 
 class Player:
-    def __init__(self, image):
-        self.image = image
+    def __init__(self):
+        self.image = load_sprite("player_plane.png")
         self.rect = self.image.get_rect(midbottom=(WIDTH // 2, 580))
         self.speed = 5
         self.bullet_speed = 500
@@ -14,12 +14,12 @@ class Player:
         self.last_fire_time = 0
         self.fire_delay = 200  # ms
 
-        self.stamina = 50
-        self.max_stamina = 100
-        self.stamina_regen_rate = 10  # par seconde
+        self.stamina = 0
+        self.max_stamina = 1000
+        self.stamina_regen_rate = 2
         self.stamina_move_cost = 0.2
-        self.stamina_fire_cost = 5
-        self.stamina_spent = 0.0  # ← ajouté ici
+        self.stamina_fire_cost = 1
+        self.stamina_spent = 0.0
 
         self.health = 100
         self.max_health = 100
