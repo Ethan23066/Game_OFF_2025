@@ -14,11 +14,12 @@ class Player:
         self.last_fire_time = 0
         self.fire_delay = 200  # ms
 
-        self.stamina =50
+        self.stamina = 50
         self.max_stamina = 100
         self.stamina_regen_rate = 10  # par seconde
         self.stamina_move_cost = 0.2
         self.stamina_fire_cost = 5
+        self.stamina_spent = 0.0  # ← ajouté ici
 
         self.health = 100
         self.max_health = 100
@@ -27,6 +28,7 @@ class Player:
         if self.stamina >= self.stamina_move_cost:
             self.rect.x -= self.speed
             self.stamina -= self.stamina_move_cost
+            self.stamina_spent += self.stamina_move_cost
             if self.rect.left < 0:
                 self.rect.left = 0
 
@@ -34,6 +36,7 @@ class Player:
         if self.stamina >= self.stamina_move_cost:
             self.rect.x += self.speed
             self.stamina -= self.stamina_move_cost
+            self.stamina_spent += self.stamina_move_cost
             if self.rect.right > WIDTH:
                 self.rect.right = WIDTH
 
@@ -51,6 +54,7 @@ class Player:
         ):
             self.last_fire_time = now
             self.stamina -= self.stamina_fire_cost
+            self.stamina_spent += self.stamina_fire_cost
             return Bullet(
                 x=self.rect.centerx,
                 y=self.rect.top,

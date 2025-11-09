@@ -17,10 +17,13 @@ class Interface:
     def set_game_over(self, wave_manager, player):
         self.game_over = True
         self.waves_survived = wave_manager.current_wave
-        self.total_enemies_last_wave = len(wave_manager.enemies)
-        self.remaining_enemies_at_death = len(wave_manager.enemies)
+
+        last_wave_id = wave_manager.current_wave - 1
+        self.total_enemies_last_wave = sum(1 for e in wave_manager.enemies if e.wave_id == last_wave_id)
+        self.remaining_enemies_at_death = sum(1 for e in wave_manager.enemies if e.wave_id == last_wave_id)
+
         self.total_time_survived = wave_manager.virtual_time_total
-        self.stamina_used = player.stamina_spent  # ← à ajouter dans player.py
+        self.stamina_used = player.stamina_spent
 
     def add_kill(self):
         self.enemies_killed += 1

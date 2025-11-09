@@ -9,20 +9,42 @@ class GamepadController:
             self.joystick.init()
 
     def update(self):
-        # Rien à faire ici, les événements sont gérés dans la boucle
         pass
 
     def is_left(self):
-        return self.joystick and self.joystick.get_axis(0) < -0.5
+        return (
+            self.joystick
+            and self.joystick.get_numaxes() > 0
+            and self.joystick.get_axis(0) < -0.5
+        )
 
     def is_right(self):
-        return self.joystick and self.joystick.get_axis(0) > 0.5
+        return (
+            self.joystick
+            and self.joystick.get_numaxes() > 0
+            and self.joystick.get_axis(0) > 0.5
+        )
 
     def is_fire(self):
-        return self.joystick and self.joystick.get_button(0)  # bouton A
+        return (
+            self.joystick
+            and self.joystick.get_numbuttons() > 0
+            and self.joystick.get_button(0)
+        )
 
     def is_enter(self):
-        return self.joystick and self.joystick.get_button(7)  # bouton Start
+        return (
+            self.joystick
+            and self.joystick.get_numbuttons() > 7
+            and self.joystick.get_button(7)
+        )
 
     def is_escape(self):
-        return self.joystick and self.joystick.get_button(6)  # bouton Back
+        return (
+            self.joystick
+            and self.joystick.get_numbuttons() > 6
+            and self.joystick.get_button(6)
+        )
+
+    def draw_mobile_buttons(self, screen):
+        pass

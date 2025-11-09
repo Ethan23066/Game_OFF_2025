@@ -7,8 +7,8 @@ class WaveManager:
         self.max_waves = None
         self.enemies = []
         self.virtual_time = 0.0
-        self.virtual_time_total = 0.0  # ← ajouté ici
-        self.wave_time_limit = 15.0  # secondes max par vague
+        self.virtual_time_total = 0.0
+        self.wave_time_limit = 15.0
 
     def spawn_wave(self):
         if self.max_waves is not None and self.current_wave >= self.max_waves:
@@ -19,6 +19,7 @@ class WaveManager:
             x = (i % 10) * 60
             y = 50 + (i // 10) * 40
             enemy = Enemy(self.enemy_surface, x, y)
+            enemy.wave_id = self.current_wave  # ← attribuer l’origine
             self.enemies.append(enemy)
 
         self.current_wave += 1
@@ -27,7 +28,7 @@ class WaveManager:
 
     def update(self, dt):
         self.virtual_time += dt
-        self.virtual_time_total += dt  # ← ajouté ici
+        self.virtual_time_total += dt
         for enemy in self.enemies:
             enemy.update()
 

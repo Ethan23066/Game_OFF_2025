@@ -9,6 +9,10 @@ class MobileController:
         }
         self.active = {"left": False, "right": False, "fire": False}
 
+        if not pygame.font.get_init():
+            pygame.font.init()
+        self.font = pygame.font.SysFont("Arial", 20)
+
     def handle_touch(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
             pos = event.pos
@@ -19,6 +23,9 @@ class MobileController:
             for name in self.active:
                 self.active[name] = False
 
+    def update(self):
+        pass
+
     def is_left(self):
         return self.active["left"]
 
@@ -28,8 +35,8 @@ class MobileController:
     def is_fire(self):
         return self.active["fire"]
 
-    def draw(self, screen):
+    def draw_mobile_buttons(self, screen):
         for name, rect in self.buttons.items():
             pygame.draw.rect(screen, (100, 100, 100), rect)
-            label = pygame.font.SysFont("Arial", 20).render(name.upper(), True, (255, 255, 255))
+            label = self.font.render(name.upper(), True, (255, 255, 255))
             screen.blit(label, (rect.x + 5, rect.y + 15))

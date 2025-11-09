@@ -26,6 +26,9 @@ class Game:
         self.bullets = pygame.sprite.Group()
         self.hud = HUD(self.player)
 
+        self.bg_offset = 0
+        self.bg_speed = 30  # pixels/sec
+
     def run(self):
         running = True
         while running:
@@ -48,19 +51,23 @@ class Game:
         pygame.quit()
 
     def update(self, dt):
-        self.controller.update()
-        self.player.regen_stamina(dt)
+        self.bg_offset += self.bg_speed * dt
+        if self.bg_offset >= self.screen.get_height():
+            self.bg_offset = 0
 
-        if self.controller.is_left(): self.player.move_left()
-        if self.controller.is_right(): self.player.move_right()
-        if hasattr(self.controller, "is_fire") and self.controller.is_fire():
-            bullet = self.player.fire()
-            if bullet: self.bullets.add(bullet)
+        self.controller.update()
+
+        if self.player:
+            self.player.regen_stamina(dt)
+            if self.controller.is_left(): self.player.move_left()
+            if self.controller.is_right(): self.player.move_right()
+            if hasattr(self.controller, "is_fire") and self.controller.is_fire():
+                bullet = self.player.fire()
+                if bullet: self.bullets.add(bullet)
 
         self.wave_manager.update(dt)
         self.bullets.update(dt)
 
-        # Collisions
         for bullet in self.bullets.copy():
             for enemy in self.wave_manager.enemies.copy():
                 if bullet.rect.colliderect(enemy.rect):
@@ -69,12 +76,13 @@ class Game:
                     self.interface.add_kill()
                     break
 
-        for enemy in self.wave_manager.enemies:
-            if enemy.rect.colliderect(self.player.rect):
-                self.player.health = 0
-                break
+        if self.player:
+            for enemy in self.wave_manager.enemies:
+                if enemy.rect.colliderect(self.player.rect):
+                    self.player.health = 0
+                    break
 
-        self.wave_manager.check_player_health(self.player)
+            self.wave_manager.check_player_health(self.player)
 
         if self.wave_manager.is_wave_cleared():
             self.wave_manager.spawn_wave()
@@ -83,10 +91,14 @@ class Game:
             self.interface.set_game_over(self.wave_manager, self.player)
             self.wave_manager.enemies.clear()
             self.bullets.empty()
-            self.player = None  # ← supprime visuellement le joueur
+            self.player = None
 
     def render(self):
         self.screen.fill((0, 0, 0))
+
+        for y in range(-self.screen.get_height(), self.screen.get_height(), 40):
+            rect = pygame.Rect(0, y + int(self.bg_offset), self.screen.get_width(), 20)
+            pygame.draw.rect(self.screen, (10, 10, 10), rect)
 
         if self.player:
             self.screen.blit(self.player.image, self.player.rect)
