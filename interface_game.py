@@ -35,7 +35,6 @@ class Interface:
                 "GAME OVER",
                 f"Waves survived: {self.waves_survived}",
                 f"Enemies killed: {self.enemies_killed}",
-                f"Enemies in last wave: {self.total_enemies_last_wave}",
                 f"Remaining enemies: {self.remaining_enemies_at_death}",
                 f"Stamina used: {int(self.stamina_used)}",
                 f"Time survived: {int(self.total_time_survived)}s"
