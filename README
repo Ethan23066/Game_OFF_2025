@@ -1,0 +1,30 @@
+# Space Invaders (Game Off 2025)
+
+## 📌 Overview
+This project is a personal reinterpretation of the classic **Space Invaders**, developed in Python using **Pygame**.
+It is part of the Game Off 2025 jam and serves both as a creative challenge and a technical exercise.
+
+## 🎮 Gameplay
+- Control a spaceship at the bottom of the screen.
+- Shoot projectiles to destroy incoming waves of aliens.
+- Aliens move horizontally and descend step by step.
+- The game ends if aliens reach the ground or the player is hit.
+- Score is tracked and displayed in real time.
+
+## ⚙️ Features
+- Player movement (left/right).
+- Shooting mechanics.
+- Enemy waves
+- Collision detection (bullets vs aliens).
+- Score system.
+
+- Current code size: ~770 lines.
+- Hosted under **R2D2G Studios**.
+
+## 📂 Author
+Developed by **Ethan (R2D2G Studios)**.
+
+##  How to Run
+1. Install Python 3.x and Pygame (`pip install pygame`).
+2. Clone the repository.
+3. Run `python3 main.py` to start the game.
